@@ -1,0 +1,118 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class TravelUI extends StatelessWidget {
+  const TravelUI({super.key});
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Map<String, String>> hotlines = [
+      {
+        'name': 'ข้อมูลจราจร',
+        'number': '1197',
+        'image': 'assets/images/bank_0.png', // placeholder, will adjust
+      },
+      {
+        'name': 'ตำรวจทางหลวง',
+        'number': '1193',
+        'image': 'assets/images/emg_1.png',
+      },
+      {
+        'name': 'ตำรวจท่องเที่ยว',
+        'number': '1155',
+        'image': 'assets/images/emg_1.png',
+      },
+      {
+        'name': 'เส้นทางถนนด่วน',
+        'number': '1543',
+        'image': 'assets/images/emg_4.png',
+      },
+      {
+        'name': 'ขสมก.',
+        'number': '1348',
+        'image': 'assets/images/pub_0.png',
+      },
+    ];
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          children: [
+            Text(
+              'สายด่วน\nการเดินทาง',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.kanit(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Header image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.asset(
+                'assets/images/pub_0.png', // travel related header, adjust later
+                height: 140,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 20),
+            ...hotlines.map((item) {
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.asset(
+                      item['image']!,
+                      width: 48,
+                      height: 48,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  title: Text(
+                    item['name']!,
+                    style: GoogleFonts.kanit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    item['number']!,
+                    style: GoogleFonts.kanit(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.phone, color: Colors.green),
+                    onPressed: () => _makePhoneCall(item['number']!),
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+}
